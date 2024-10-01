@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 export const verifyToken = async (req, reply) => {
   try {

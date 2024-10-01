@@ -3,10 +3,12 @@ import { connectDb } from "./src/config/connect.js";
 import "dotenv/config";
 import { PORT } from "./src/config/config.js";
 import { buildAdminRouter, Admin } from "./src/config/setup.js";
+import { registerRoutes } from "./src/routes/index.js";
 
 const start = async () => {
   await connectDb(process.env.MONGO_URI);
-  const app = Fastify(); 
+  const app = Fastify();
+  await registerRoutes(app);
   await buildAdminRouter(app);
   app.listen({ port: PORT, host: "0.0.0.0" }, (err, addr) => {
     if (err) {
@@ -14,7 +16,7 @@ const start = async () => {
     } else {
       console.log(`Server running on port ${PORT}${Admin.options.rootPath}`);
     }
-  }); 
+  });
 };
 
-start(); 
+start();

@@ -1,5 +1,6 @@
-import { Customer, DeliveryPartner } from "../../models/user.js";
 import jwt from "jsonwebtoken";
+import { Customer, DeliveryPartner } from "../../models/index.js";
+import "dotenv/config";
 
 const generateTokens = (user) => {
   const accessToken = jwt.sign(
@@ -59,8 +60,7 @@ export const loginDeliveryPartner = async (req, reply) => {
       return reply.status(404).send({ message: "Delivery Partner not found" });
     }
 
-    const isMatch = await deliveryPartner.comparePassword(password);
-    if (!isMatch) {
+    if (deliveryPartner.password !== password) {
       return reply.status(400).send({ message: "Invalid Credentials" });
     }
 
