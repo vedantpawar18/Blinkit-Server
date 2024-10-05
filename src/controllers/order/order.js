@@ -4,7 +4,8 @@ import { Customer, DeliveryPartner } from "../../models/user.js";
 
 export const createOrder = async (req, reply) => {
   try {
-    const userId = req.user;
+    // Extract userId correctly from the req.user object
+    const userId = req.user.userId; // Make sure req.user is structured this way
     const { items, branch, totalPrice } = req.body;
 
     const customerData = await Customer.findById(userId);
@@ -33,8 +34,8 @@ export const createOrder = async (req, reply) => {
         address: customerData.address || "No address available",
       },
       pickupLocation: {
-        latitude: branchData.liveLocation.latitude,
-        longitude: branchData.liveLocation.longitude,
+        latitude: branchData.location.latitude,
+        longitude: branchData.location.longitude,
         address: branchData.address || "No address available",
       },
     });
@@ -44,11 +45,10 @@ export const createOrder = async (req, reply) => {
     return reply.status(201).send(savedOrder);
   } catch (error) {
     console.error("Error creating order:", error);
-    return reply
-      .status(500)
-      .send({ message: "Failed to create order", error: error.message });
+    return reply.status(500).send({ message: "Failed to create order", error: error.message });
   }
 };
+
 
 export const confirmOrder = async (req, reply) => {
   try {
