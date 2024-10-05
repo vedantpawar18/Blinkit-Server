@@ -45,10 +45,11 @@ export const createOrder = async (req, reply) => {
     return reply.status(201).send(savedOrder);
   } catch (error) {
     console.error("Error creating order:", error);
-    return reply.status(500).send({ message: "Failed to create order", error: error.message });
+    return reply
+      .status(500)
+      .send({ message: "Failed to create order", error: error.message });
   }
 };
-
 
 export const confirmOrder = async (req, reply) => {
   try {
@@ -80,8 +81,8 @@ export const confirmOrder = async (req, reply) => {
       address: deliveryPersonLocation.address || "No address available",
     };
 
+    req.server.io.to(orderId).emit("orderConfiermed", order);
     const savedOrder = await order.save();
-
     return reply.send(savedOrder);
   } catch (error) {
     console.error("Error confirming order:", error);
@@ -120,6 +121,7 @@ export const updateOrderStatus = async (req, reply) => {
 
     const savedOrder = await order.save();
 
+    req.server.io.to(orderId).emit("liveTrackingUpdates", order);
     return reply.send(savedOrder);
   } catch (error) {
     console.error("Error updating order status:", error);
