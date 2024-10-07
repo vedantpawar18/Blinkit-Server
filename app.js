@@ -18,7 +18,7 @@ const start = async () => {
       pingInterval: 10000,
       pingTimeout: 5000,
       transports: ["websocket"],
-    });
+    }); 
 
     await registerRoutes(app);
     await buildAdminRouter(app);
